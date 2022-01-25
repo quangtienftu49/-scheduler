@@ -43,7 +43,7 @@ export default function useApplicationData(props) {
     };
 
     axios
-      .put(`http://localhost:8001/api/appointments/${id}`, appointment)
+      .put(`http://localhost:8000/api/appointments/${id}`, appointment)
       .then(() => {
         dispatch({ type: SET_INTERVIEW, value: appointments });
         cb(params)
