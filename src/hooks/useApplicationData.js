@@ -7,13 +7,14 @@ import reducer, {
   UPDATE_SPOTS
 } from "../reducer/application";
 
-export default function useApplicationData() {
+export default function useApplicationData(props) {
   const [state, dispatch] = useReducer(reducer, {
     day: "Monday",
     days: [],
     appointments: {},
     interviewers: {}
   });
+
   const setDay = day => dispatch({ type: SET_DAY, value: day });
 
   useEffect(() => {
