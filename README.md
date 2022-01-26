@@ -21,3 +21,9 @@ npm test
 ```sh
 npm run storybook
 ```
+
+## Screenshots
+
+!["The scheduler glance"](https://github.com/quangtienftu49/-scheduler/blob/master/screenshots/image1.png)
+!["Select a slot"](https://github.com/quangtienftu49/-scheduler/blob/master/screenshots/image2.png)
+!["Input name and pick an interviewer"](https://github.com/quangtienftu49/-scheduler/blob/master/screenshots/image3.png)
