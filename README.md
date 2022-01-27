@@ -26,7 +26,7 @@ npm run storybook
 
 Download this repo https://github.com/lighthouse-labs/scheduler-api as your backend. Follow the README.
 
-Please create .env.test (copied from .env.example) and change PGDATABSE value to scheduler_test. Create a new database called scheduler_test to test E2E with Cypress.
+Please create .env.test (copied from .env.development) and change PGDATABSE value to scheduler_test. Create a new database called scheduler_test to test E2E with Cypress.
 
 ## Screenshots
 
