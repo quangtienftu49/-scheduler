@@ -10,6 +10,8 @@ function getAppointmentsForDay(state, day) {
     if (dayObj.name === day) {
       dayObj.appointments.forEach(apptId => appointmentArr.push(apptId))
     }
+
+    return appointmentArr;
   })
 
   return matchIds(state.appointments, appointmentArr);
@@ -35,8 +37,10 @@ function getInterviewersForDay(state, day) {
     if (dayObj.name === day) {
       dayObj.interviewers.forEach(interviewerId => interviewersArr.push(interviewerId))
     }
+
+    return interviewersArr;
   })
   return matchIds(state.interviewers, interviewersArr);
 }
 
-module.exports = { matchIds, getAppointmentsForDay, getInterview, getInterviewersForDay };
+module.exports = { getAppointmentsForDay, getInterview, getInterviewersForDay };
