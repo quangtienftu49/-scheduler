@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import "./styles.scss";
 import Header from "./Header";
 import Show from "./Show";
@@ -38,10 +38,31 @@ export default function Appointment(props) {
     }
   }
 
+  useEffect(() => {
+    
+    if (props.interview && mode === EMPTY) {
+      transition(SHOW);
+    }
+    
+    if (!props.interview && mode === SHOW) {
+      transition(EMPTY);
+    }
+
+  }, [mode, transition, props.interview])
+
   function deleteApp() {
     transition(DELETING);
     props
       .cancelInterview(props.id, transition, EMPTY, ERROR_DELETE)
+
+    // if (mode === CONFIRM) {
+    //   transition(DELETING, true)
+    //   props.cancelInterview(props.id)
+    //   // .then(() => transition(EMPTY))
+    //   .catch(() => transition(ERROR_DELETE, true))
+    // } else {
+    //   transition(CONFIRM);      
+    // }
   }
 
   return (
@@ -85,8 +106,8 @@ export default function Appointment(props) {
       )}
       {mode === EDIT && (
         <Form
-          name={props.interview.student}
-          interviewer={props.interview.interviewer.id}
+          name={props.name ? props.name : props.interview.student}
+          value={props.value ? props.value: props.interview.interviewer.id}
           interviewers={props.interviewers}
           onSave={save}
           onCancel={() => back()}
