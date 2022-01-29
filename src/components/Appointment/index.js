@@ -25,15 +25,17 @@ export default function Appointment(props) {
   );
 
   function save(name, interviewer) {
-    const interview = {
-      student: name,
-      interviewer
-    };
-
-    transition(SAVING);
-
-    props
-      .bookInterview(props.id, interview, transition, SHOW, ERROR_SAVE)
+    if(name&&interviewer){
+      const interview = {
+        student: name,
+        interviewer
+      };
+  
+      transition(SAVING);
+  
+      props
+        .bookInterview(props.id, interview, transition, SHOW, ERROR_SAVE)
+    }
   }
 
   function deleteApp() {
