@@ -1,54 +1,56 @@
 export const SET_DAY = "SET_DAY";
 export const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
 export const SET_INTERVIEW = "SET_INTERVIEW";
-export const UPDATE_INTERVIEW = "UPDATE_INTERVIEW";
-export const UPDATE_SPOTS = "UPDATE_SPOTS";
+export const SET_INTERVIEW_DAYS = "SET_INTERVIEW_DAYS";
+
+function getSpotsForDay(state, day) {
+  return state.days
+    .find(d => d.name === day)
+    .appointments.reduce((a, c) => {
+      return state.appointments[c].interview ? a : a + 1;
+    }, 0);
+}
 
 export default function reducer(state, action) {
-  const setSpots = () => {
-    let spotCount = 5;
-    for (let day in state.days) {
-      if (state.days[day].name === state.day) {
-        for (let id of state.days[day].appointments) {
-          if (state.appointments[id].interview !== null) {
-            spotCount--;
-          }
-        }
-      }
-    }
-    return state.days.map(day => {
-      if (day.name !== state.day) {
-        return day;
-      }
-      return {
-        ...day,
-        spots: spotCount
-      };
-    });
-  }
-
   switch (action.type) {
     case SET_DAY:
-      return { ...state, day: action.value };
+      return {
+        ...state,
+        day: action.day
+      };
     case SET_APPLICATION_DATA:
-      const days = action.value[0].data;
-      const appointments = action.value[1].data;
-      const interviewers = action.value[2].data;
-      return { ...state, days, appointments, interviewers };
-    case SET_INTERVIEW:
-      return { ...state, appointments: action.value, days: setSpots() };
-    case UPDATE_INTERVIEW:
-      const newAppointment = {
-        ...state.appointments[action.value.id],
-        interview: action.value.interview
+      return {
+        ...state,
+        days: action.days,
+        appointments: action.appointments,
+        interviewers: action.interviewers
       };
-      const newAppointments = {
-        ...state.appointments,
-        [action.value.id]: newAppointment
+    case SET_INTERVIEW_DAYS: {
+      return {
+        ...state,
+        days: action.days,
+        appointments: action.appointments
       };
-      return { ...state, appointments: newAppointments };
-    case UPDATE_SPOTS:
-      return { ...state, days: setSpots() };
+    }
+    case SET_INTERVIEW: {
+      const newState = {
+        ...state,
+        appointments: {
+          ...state.appointments,
+          [action.id]: {
+            ...state.appointments[action.id],
+            interview: action.interview
+          }
+        }
+      };
+      return {
+        ...newState,
+        days: state.days.map(day => ({
+          ...day,
+          spots: getSpotsForDay(newState, day.name)
+        }))
+      };
+    }
     default:
       throw new Error(
         `Tried to reduce with unsupported action type: ${action.type}`

@@ -1,11 +1,17 @@
-import React from "react";
+// eslint-disable-next-line
+import React, { useState, useEffect } from "react";
+
 import "components/Application.scss";
 import DayList from "./DayList";
-import Appointment from "components/Appointment/index";
-import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "../helpers/selectors";
+// eslint-disable-next-line
+import InterviewerList from "./InterviewerList";
+import Appointment from "components/Appointment";
+// eslint-disable-next-line
+import { matchAppointments, getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 import useApplicationData from "hooks/useApplicationData";
 
 export default function Application(props) {
+
   const {
     state,
     setDay,
@@ -13,50 +19,53 @@ export default function Application(props) {
     cancelInterview
   } = useApplicationData();
 
-  const appointments = getAppointmentsForDay(state, state.day);
+  const appointmentObjects = getAppointmentsForDay(state, state.day);
   const interviewers = getInterviewersForDay(state, state.day);
-  const schedule = appointments.map((appointment) => {
-  const interview = getInterview(state, appointment.interview);
-    
+
+  const appointment = appointmentObjects.map((appointmentObject) => {
+    const interview = getInterview(state, appointmentObject.interview)
+
     return (
-      <Appointment
-        key={appointment.id}
-        id={appointment.id}
-        time={appointment.time}
-        interview={interview}
-        interviewers={interviewers}
-        bookInterview={bookInterview}
-        cancelInterview={cancelInterview}
-      />
-    );
-  });
-  return (<main className="layout">
-    <section className="sidebar">
-      <img
-        className="sidebar--centered"
-        src="images/logo.png"
-        alt="Interview Scheduler"
-      />
-      <hr className="sidebar__separator sidebar--centered" />
-      <nav className="sidebar__menu">
-        <DayList 
-        days={state.days}
-        day={state.day}
-        setDay={setDay}
-        bookInterview={bookInterview}
-        cancelInterview={cancelInterview}
+        <Appointment 
+          {...appointmentObject}
+          key={appointmentObject.id}
+          interview={interview}
+          interviewers={interviewers}
+          bookInterview={bookInterview}
+          cancelInterview={cancelInterview}
         />
-      </nav>
-      <img
-        className="sidebar__lhl sidebar--centered"
-        src="images/lhl.png"
-        alt="Lighthouse Labs"
-      />
-    </section>
-    <section className="schedule">
-      {schedule}
-      <Appointment key="last" time="5pm" bookInterview={bookInterview} cancelInterview={cancelInterview} />
-    </section>
-  </main>
+      )
+  });
+
+  return (
+    <main className="layout">
+      <section className="sidebar">
+        <img
+          className="sidebar--centered"
+          src="images/logo.png"
+          alt="Interview Scheduler"
+        />
+        <hr className="sidebar__separator sidebar--centered" />
+        <nav className="sidebar__menu">
+        <DayList
+          days={state.days}
+          day={state.day}
+          setDay={setDay}
+          bookInterview={bookInterview}
+          cancelInterview={cancelInterview}
+        />
+        </nav>
+        <img
+          className="sidebar__lhl sidebar--centered"
+          src="images/lhl.png"
+          alt="Lighthouse Labs"
+        />
+      </section>
+      <section className="schedule">
+        {appointment}
+        <Appointment key="last" time="5pm" bookInterview={bookInterview} cancelInterview={cancelInterview} 
+        />
+      </section>
+    </main>
   );
 }
